@@ -125,32 +125,31 @@ function Brand() {
   )
 }
 
-function ContactForm({ selectedService }: { selectedService: string }) {
+function ContactForm({ selectedService, onServiceChange }: { selectedService: string; onServiceChange: (serviceId: string) => void }) {
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
   const [message, setMessage] = useState('')
   const [consent, setConsent] = useState(false)
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [prepared, setPrepared] = useState(false)
 
   const serviceTitle = services.find((service) => service.id === selectedService)?.title ?? 'Консультация'
-  const mailBody = `Здравствуйте!%0A%0AМеня зовут ${encodeURIComponent(name)}.%0AИнтересует: ${encodeURIComponent(serviceTitle)}.%0AКонтакт для связи: ${encodeURIComponent(contact)}.%0A%0AЗадача: ${encodeURIComponent(message || 'Хочу обсудить задачу со специалистом.')}`
+  const mailBody = encodeURIComponent(`Здравствуйте!\n\nМеня зовут ${name}.\nИнтересует: ${serviceTitle}.\nКонтакт для связи: ${contact}.\n\nЗадача: ${message || 'Хочу обсудить задачу со специалистом.'}`)
   const mailHref = `mailto:bfk1312@bk.ru?subject=${encodeURIComponent(`Заявка с сайта: ${serviceTitle}`)}&body=${mailBody}`
+
+  function clearError(field: string) {
+    setErrors((current) => { const next = { ...current }; delete next[field]; return next })
+    setPrepared(false)
+  }
 
   function submitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!name.trim() || !contact.trim()) {
-      setError('Укажите имя и контакт для связи.')
-      setPrepared(false)
-      return
-    }
-    if (!consent) {
-      setError('Подтвердите согласие на обработку данных.')
-      setPrepared(false)
-      return
-    }
-    setError('')
-    setPrepared(true)
+    const nextErrors: Record<string, string> = {}
+    if (name.trim().length < 2) nextErrors.name = 'Укажите имя — минимум 2 буквы.'
+    if (contact.trim().length < 5) nextErrors.contact = 'Оставьте телефон или адрес почты для ответа.'
+    if (!consent) nextErrors.consent = 'Нужно согласие, чтобы подготовить обращение.'
+    setErrors(nextErrors)
+    setPrepared(Object.keys(nextErrors).length === 0)
   }
 
   return (
@@ -158,31 +157,40 @@ function ContactForm({ selectedService }: { selectedService: string }) {
       <div className="form-row">
         <label>
           <span>Ваше имя</span>
-          <input value={name} onChange={(event) => { setName(event.target.value); setPrepared(false) }} placeholder="Как к вам обращаться" autoComplete="name" />
+          <input value={name} onChange={(event) => { setName(event.target.value); clearError('name') }} placeholder="Как к вам обращаться" autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} />
+          {errors.name && <small className="field-error" id="name-error" role="alert">{errors.name}</small>}
         </label>
         <label>
           <span>Телефон или почта</span>
-          <input value={contact} onChange={(event) => { setContact(event.target.value); setPrepared(false) }} placeholder="Удобный способ связи" autoComplete="email" />
+          <input value={contact} onChange={(event) => { setContact(event.target.value); clearError('contact') }} placeholder="+7 900 000-00-00" autoComplete="email" aria-invalid={Boolean(errors.contact)} aria-describedby={errors.contact ? 'contact-error' : undefined} />
+          {errors.contact && <small className="field-error" id="contact-error" role="alert">{errors.contact}</small>}
         </label>
       </div>
       <label>
-        <span>Что нужно решить?</span>
+        <span>Интересующая услуга</span>
+        <select name="service" value={selectedService} onChange={(event) => { onServiceChange(event.target.value); setPrepared(false) }}>
+          <option value="consultation">Пока не знаю — нужна консультация</option>
+          {services.map((service) => <option key={service.id} value={service.id}>{service.title}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Что нужно решить? <small>Необязательно</small></span>
         <textarea value={message} onChange={(event) => { setMessage(event.target.value); setPrepared(false) }} placeholder="Например: нужно восстановить учёт за два квартала" rows={3} />
       </label>
-      <input type="hidden" name="service" value={serviceTitle} />
       <label className="consent">
-        <input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); setPrepared(false) }} />
+        <input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); clearError('consent') }} aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'consent-error' : undefined} />
         <span>Согласен на обработку персональных данных для ответа на обращение.</span>
       </label>
-      {error && <p className="form-error" role="alert">{error}</p>}
+      {errors.consent && <p className="form-error" id="consent-error" role="alert">{errors.consent}</p>}
       {prepared && (
-        <div className="form-success" role="status">
+        <div className="form-success" role="status" aria-live="polite">
           <span><Check size={20} aria-hidden="true" /> Заявка подготовлена</span>
           <p>Осталось отправить письмо — откроется ваше почтовое приложение.</p>
           <a className="button button-light" href={mailHref}>Открыть почту <ArrowUpRight size={18} /></a>
         </div>
       )}
       {!prepared && <button className="button button-light form-submit" type="submit">Подготовить заявку <ArrowRight size={18} /></button>}
+      {!prepared && <p className="form-note">Данные не сохраняются на сайте. Заявка откроется в вашем почтовом приложении.</p>}
     </form>
   )
 }
@@ -193,6 +201,7 @@ export default function Home() {
   const [selectedService, setSelectedService] = useState('accounting')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -203,17 +212,37 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    const sections = ['services', 'about', 'process', 'faq'].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[]
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible) setActiveSection(`#${visible.target.id}`)
+    }, { rootMargin: '-18% 0px -58% 0px', threshold: [0, 0.1, 0.3] })
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     if (!activeService) return
     const previousOverflow = document.body.style.overflow
+    const previouslyFocused = document.activeElement as HTMLElement | null
     document.body.style.overflow = 'hidden'
     closeButtonRef.current?.focus()
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setActiveService(null)
+      if (event.key === 'Tab') {
+        const dialog = closeButtonRef.current?.closest('[role="dialog"]')
+        const focusable = Array.from(dialog?.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])') ?? [])
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+        if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+      }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKeyDown)
+      previouslyFocused?.focus()
     }
   }, [activeService])
 
@@ -238,7 +267,7 @@ export default function Home() {
         <div className="header-inner">
           <Brand />
           <nav className="desktop-nav" aria-label="Основная навигация">
-            {navItems.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+            {navItems.map(([label, href]) => <a key={href} href={href} className={activeSection === href ? 'is-active' : ''} aria-current={activeSection === href ? 'location' : undefined}>{label}</a>)}
           </nav>
           <div className="header-actions">
             <a className="header-phone" href="tel:+79173985777"><Phone size={17} /> +7 917 398-57-77</a>
@@ -249,7 +278,7 @@ export default function Home() {
           </div>
         </div>
         <nav id="mobile-nav" className={`mobile-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Мобильная навигация">
-          {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowRight size={18} /></a>)}
+          {navItems.map(([label, href]) => <a key={href} href={href} className={activeSection === href ? 'is-active' : ''} aria-current={activeSection === href ? 'location' : undefined} onClick={() => setMenuOpen(false)}>{label}<ArrowRight size={18} /></a>)}
           <a href="tel:+79173985777"><Phone size={18} /> +7 917 398-57-77</a>
         </nav>
       </header>
@@ -378,7 +407,7 @@ export default function Home() {
               </div>
               <div className="working-hours"><Clock3 size={18} /> Пн–Сб, 9:00–19:00</div>
             </div>
-            <ContactForm selectedService={selectedService} />
+            <ContactForm selectedService={selectedService} onServiceChange={setSelectedService} />
           </div>
         </section>
       </main>
