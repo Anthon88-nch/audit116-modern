@@ -361,3 +361,73 @@ body { font-size: 16px; }
   .process-list p { max-width: none; }
   .contact-form select { font-size: 16px; }
 }
+
+/* Supplied photography and icon system. */
+.icon-badge { width: 56px; height: 56px; flex: 0 0 56px; display: inline-grid; place-items: center; border-radius: 50%; background: #E6ECF5; }
+.icon-badge img { display: block; width: 28px; height: 28px; object-fit: contain; }
+.site-header { background: color-mix(in oklab, var(--paper) 88%, transparent); backdrop-filter: blur(16px); }
+.hero-background { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
+.hero::after { content: ''; position: absolute; inset: 0; z-index: -2; pointer-events: none; background: linear-gradient(90deg, rgba(247, 248, 250, .95) 0%, rgba(247, 248, 250, .95) 25%, rgba(247, 248, 250, 0) 60%); }
+.visual-title { display: inline-flex; align-items: center; gap: 12px; }
+.visual-footer > div { padding-block: 12px; }
+.hero-note .icon-badge { margin-right: 2px; }
+.hero-contact { padding: 14px 18px; border-radius: 16px; background: rgba(247, 248, 250, .9); backdrop-filter: blur(10px); }
+
+.service-card { padding: 0 28px 27px; }
+.service-accounting { padding: 0 34px 34px; }
+.service-photo { flex: none; aspect-ratio: 4 / 3; margin: 0 -28px 24px; overflow: hidden; border-radius: 19px 19px 0 0; }
+.service-accounting .service-photo { margin: 0 -34px 28px; }
+.service-photo img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease-out; }
+.service-card:hover .service-photo img, .service-card:focus-within .service-photo img { transform: scale(1.04); }
+.service-content { padding-top: 24px; }
+.service-additional { padding-top: 27px; background: #00205B; color: #F7F8FA; border-color: #00205B; }
+.service-additional .service-content p { color: #F7F8FA; }
+.service-additional .service-more:hover { color: #E6ECF5; }
+
+.about-statement { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 40%); align-items: center; gap: 32px; }
+.about-statement h2 { font-size: clamp(38px, 3.5vw, 56px); }
+.about-copy > p { margin: 28px 0 0; font-size: 16px; line-height: 1.8; color: var(--sage-200); }
+.director { display: block; min-width: 0; margin: 0; }
+.director img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 16px; }
+.director figcaption { margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sage-200); }
+.trust-since > .icon-badge { position: absolute; top: 20px; right: 20px; left: auto; }
+.format-icons { display: flex; gap: 8px; }
+.trust-clients p { display: flex; align-items: center; gap: 12px; }
+.trust-clients p > span { line-height: 1.5; }
+.trust-values > span { gap: 12px; }
+
+.contact-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 64px; row-gap: 40px; align-items: start; }
+.contact-photo { grid-column: 1; grid-row: 1 / span 2; width: 100%; height: 100%; min-height: 560px; object-fit: cover; object-position: left center; border-radius: 16px; }
+.contact-copy { grid-column: 2; grid-row: 1; }
+.contact-form { grid-column: 2; grid-row: 2; }
+
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-photo { grid-column: 1; grid-row: 1; height: 420px; min-height: 0; }
+  .contact-copy { grid-column: 1; grid-row: 2; }
+  .contact-form { grid-column: 1; grid-row: 3; }
+}
+
+@media (max-width: 600px) {
+  .hero { padding-top: 388px; }
+  .hero-background { inset: 76px 0 auto; width: 100%; height: 260px; object-position: right center; }
+  .hero::after { display: none; }
+  .hero-contact { padding: 14px; }
+  .visual-heading { align-items: flex-start; }
+  .visual-title { gap: 9px; }
+  .visual-footer > div { padding: 10px 8px; gap: 7px; }
+  .hero-note { gap: 14px; }
+  .service-card, .service-accounting { min-height: 0; padding: 0 24px 24px; }
+  .service-photo, .service-accounting .service-photo { margin: 0 -24px 20px; border-radius: 15px 15px 0 0; }
+  .service-additional { min-height: 310px; padding-top: 24px; }
+  .about-statement { display: flex; flex-direction: column; align-items: stretch; gap: 32px; }
+  .director { order: -1; width: 100%; }
+  .director figcaption { font-size: 13px; }
+  .about-statement h2 { font-size: clamp(34px, 10.5vw, 48px); }
+  .contact-photo { height: 220px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-photo img { transition: none; }
+  .service-card:hover .service-photo img, .service-card:focus-within .service-photo img { transform: none; }
+}

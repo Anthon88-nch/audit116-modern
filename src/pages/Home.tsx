@@ -13,7 +13,6 @@ import {
   Globe2,
   Landmark,
   Mail,
-  MapPin,
   Menu,
   MessageCircleMore,
   Phone,
@@ -32,6 +31,8 @@ type Service = {
   className: string
   icon: typeof Calculator
   tag: string
+  image?: string
+  imageAlt?: string
 }
 
 const services: Service[] = [
@@ -44,6 +45,8 @@ const services: Service[] = [
     className: 'service-accounting',
     icon: Calculator,
     tag: 'Комплексно',
+    image: '/images/03-buhuchet.webp',
+    imageAlt: 'Синие и светлые папки с бухгалтерскими документами на полке',
   },
   {
     id: 'taxes',
@@ -54,6 +57,8 @@ const services: Service[] = [
     className: 'service-taxes',
     icon: Landmark,
     tag: 'Защита интересов',
+    image: '/images/04-nalogi.webp',
+    imageAlt: 'Письмо, перьевая ручка и синяя папка на рабочем столе',
   },
   {
     id: 'express',
@@ -64,6 +69,8 @@ const services: Service[] = [
     className: 'service-express',
     icon: ShieldCheck,
     tag: 'Быстрая диагностика',
+    image: '/images/05-audit.webp',
+    imageAlt: 'Лупа и карандаш на листе с финансовыми показателями',
   },
   {
     id: 'trade',
@@ -74,6 +81,8 @@ const services: Service[] = [
     className: 'service-trade',
     icon: Globe2,
     tag: 'ВЭД',
+    image: '/images/06-ved.webp',
+    imageAlt: 'Модель грузового контейнера на документах внешнеэкономической деятельности',
   },
   {
     id: 'management',
@@ -84,6 +93,8 @@ const services: Service[] = [
     className: 'service-management',
     icon: BriefcaseBusiness,
     tag: 'Для собственника',
+    image: '/images/07-upr-uchet.webp',
+    imageAlt: 'Планшет с графиком роста на рабочем столе руководителя',
   },
   {
     id: 'additional',
@@ -115,6 +126,10 @@ const faq = [
     answer: 'Стоимость зависит от количества операций, состояния учёта и нужных услуг. Оставьте заявку с коротким описанием задачи — специалист сможет подготовить предметное предложение.',
   },
 ]
+
+function IconBadge({ src, alt }: { src: string; alt: string }) {
+  return <span className="icon-badge"><img src={src} alt={alt} loading="lazy" decoding="async" width="28" height="28" /></span>
+}
 
 function Brand() {
   return (
@@ -285,6 +300,7 @@ export default function Home() {
 
       <main id="main">
         <section className="hero section-pad" aria-labelledby="hero-title">
+          <img className="hero-background" src="/images/01-hero.webp" alt="Документы, перьевая ручка и печать на рабочем столе бухгалтера" fetchPriority="high" decoding="async" width="1280" height="720" />
           <div className="hero-grid page-width">
             <div className="hero-copy">
               <div className="eyebrow"><span className="square-marker" /> Бухгалтерия для спокойного бизнеса</div>
@@ -298,7 +314,7 @@ export default function Home() {
             </div>
 
             <div className="hero-visual" aria-label="Схема: от разрозненных данных к упорядоченному учёту">
-              <div className="visual-heading"><span>Учёт под контролем</span><span className="live-label"><i /> порядок в цифрах</span></div>
+              <div className="visual-heading"><span className="visual-title"><IconBadge src="/icons/04-uchet-pod-kontrolem.svg" alt="Учёт под контролем" /><span>Учёт под контролем</span></span><span className="live-label"><i /> порядок в цифрах</span></div>
               <svg className="clarity-chart" viewBox="0 0 620 370" role="img" aria-label="Точки слева выстраиваются в понятную систему справа">
                 <defs>
                   <pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M 52 0 L 0 0 0 52" fill="none" stroke="currentColor" strokeWidth="1" opacity=".16" /></pattern>
@@ -316,12 +332,13 @@ export default function Home() {
                 <g fill="#004ea8"><circle cx="282" cy="184" r="3"/><circle cx="372" cy="155" r="3"/><circle cx="468" cy="116" r="3"/><circle cx="574" cy="70" r="4"/></g>
               </svg>
               <div className="visual-footer">
-                <div><FileCheck2 size={21} /><span><strong>Отчётность</strong><small>точно и в срок</small></span></div>
-                <div><ShieldCheck size={21} /><span><strong>Риски</strong><small>под контролем</small></span></div>
+                <div><IconBadge src="/icons/02-otchetnost-v-srok.svg" alt="Отчётность точно и в срок" /><span><strong>Отчётность</strong><small>точно и в срок</small></span></div>
+                <div><IconBadge src="/icons/03-riski-pod-kontrolem.svg" alt="Риски под контролем" /><span><strong>Риски</strong><small>под контролем</small></span></div>
               </div>
             </div>
 
             <div className="hero-note">
+              <IconBadge src="/icons/01-16-let.svg" alt="16+ лет помогаем бизнесу" />
               <span className="note-number">16+</span>
               <span>лет помогаем бизнесу<br />работать без лишних рисков</span>
             </div>
@@ -344,6 +361,7 @@ export default function Home() {
                 const Icon = service.icon
                 return (
                   <article key={service.id} className={`service-card ${service.className}`}>
+                    {service.image && <div className="service-photo"><img src={service.image} alt={service.imageAlt} loading="lazy" decoding="async" width="800" height="600" /></div>}
                     <div className="service-top"><span className="service-tag">{service.tag}</span><Icon size={26} strokeWidth={1.6} aria-hidden="true" /></div>
                     <div className="service-content"><h3>{service.title}</h3><p>{service.short}</p></div>
                     <button className="service-more" onClick={() => setActiveService(service)} aria-label={`Подробнее: ${service.title}`}>Подробнее <ArrowUpRight size={18} /></button>
@@ -357,16 +375,21 @@ export default function Home() {
         <section id="about" className="about-section section-pad">
           <div className="page-width about-grid">
             <div className="about-statement">
-              <div className="eyebrow eyebrow-light"><span className="square-marker" /> О компании</div>
-              <h2>Говорим с бизнесом<br /><em>на одном языке.</em></h2>
-              <p>«АудиторЪ» — команда специалистов в бухгалтерском учёте, налогообложении и финансовом сопровождении. Не используем шаблонные решения: учитываем специфику деятельности, систему налогообложения и цели клиента.</p>
-              <div className="director"><span className="director-monogram">СТ</span><span><strong>Топал Светлана Вадимовна</strong><small>Директор ООО «АудиторЪ»</small></span></div>
+              <div className="about-copy">
+                <div className="eyebrow eyebrow-light"><span className="square-marker" /> О компании</div>
+                <h2>Говорим с бизнесом<br /><em>на одном языке.</em></h2>
+                <p>«АудиторЪ» — команда специалистов в бухгалтерском учёте, налогообложении и финансовом сопровождении. Не используем шаблонные решения: учитываем специфику деятельности, систему налогообложения и цели клиента.</p>
+              </div>
+              <figure className="director">
+                <img src="/images/02-portret.webp" alt="Топал Светлана Вадимовна за рабочим столом" loading="lazy" decoding="async" width="800" height="1067" />
+                <figcaption>Топал Светлана Вадимовна, директор ООО «АудиторЪ»</figcaption>
+              </figure>
             </div>
             <div className="trust-bento">
-              <div className="trust-card trust-since"><span>с</span><strong>2009</strong><p>года работаем<br />с бизнесом</p></div>
-              <div className="trust-card trust-format"><MapPin size={24} /><strong>Набережные Челны</strong><p>Республика Татарстан<br />и дистанционно</p></div>
-              <div className="trust-card trust-clients"><span>Для кого</span><p>Малый, средний<br />и крупный бизнес</p><p>ИП и самозанятые</p><p>Организации без<br />штатной бухгалтерии</p></div>
-              <div className="trust-card trust-values"><span><Check size={17} /> Конфиденциально</span><span><Check size={17} /> Понятные рекомендации</span><span><Check size={17} /> Соблюдение сроков</span></div>
+              <div className="trust-card trust-since"><IconBadge src="/icons/13-kalendar-alt.svg" alt="Работаем с бизнесом с 2009 года" /><span>с</span><strong>2009</strong><p>года работаем<br />с бизнесом</p></div>
+              <div className="trust-card trust-format"><div className="format-icons"><IconBadge src="/icons/08a-ochno.svg" alt="Очная работа в Набережных Челнах" /><IconBadge src="/icons/08b-distancionno.svg" alt="Дистанционная работа" /></div><strong>Набережные Челны</strong><p>Республика Татарстан<br />и дистанционно</p></div>
+              <div className="trust-card trust-clients"><span>Для кого</span><p><IconBadge src="/icons/09-malyy-i-sredniy-biznes.svg" alt="Малый, средний и крупный бизнес" /><span>Малый, средний<br />и крупный бизнес</span></p><p><IconBadge src="/icons/10-ip-i-samozanyatye.svg" alt="ИП и самозанятые" /><span>ИП и самозанятые</span></p><p><IconBadge src="/icons/11-bez-shtatnoy-buhgalterii.svg" alt="Организации без штатной бухгалтерии" /><span>Организации без<br />штатной бухгалтерии</span></p></div>
+              <div className="trust-card trust-values"><span><IconBadge src="/icons/05-konfidencialno.svg" alt="Конфиденциально" /> Конфиденциально</span><span><IconBadge src="/icons/06-ponyatnye-rekomendacii.svg" alt="Понятные рекомендации" /> Понятные рекомендации</span><span><IconBadge src="/icons/07-soblyudenie-srokov.svg" alt="Соблюдение сроков" /> Соблюдение сроков</span></div>
             </div>
           </div>
         </section>
@@ -397,6 +420,7 @@ export default function Home() {
 
         <section id="contacts" className="contact-section section-pad">
           <div className="page-width contact-grid">
+            <img className="contact-photo" src="/images/08-zvonok.webp" alt="Телефонная трубка в руке на рабочем столе для разговора с бухгалтером" loading="lazy" decoding="async" width="1280" height="720" />
             <div className="contact-copy">
               <div className="eyebrow eyebrow-light"><span className="square-marker" /> Обсудим вашу задачу?</div>
               <h2>Начнём с<br /><em>короткого разговора.</em></h2>
