@@ -134,8 +134,7 @@ function IconBadge({ src, alt }: { src: string; alt: string }) {
 function Brand() {
   return (
     <a className="brand" href="#top" aria-label="АудиторЪ — на главную">
-      <span className="brand-mark" aria-hidden="true"><span>А</span></span>
-      <span className="brand-name">АудиторЪ<small>учёт · налоги · решения</small></span>
+      <img className="brand-logo" src="/logo-v2.png" alt="АудиторЪ" width="1188" height="361" decoding="async" />
     </a>
   )
 }
