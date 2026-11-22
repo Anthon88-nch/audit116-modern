@@ -434,6 +434,7 @@ body { font-size: 16px; }
 
 /* Keep supplied icons optically centered inside their circular badges. */
 .visual-footer .icon-badge, .trust-values .icon-badge { display: inline-grid; place-items: center; }
+.hero-contact { grid-column: 1 / -1; }
 
 /* Supplied brand identity. */
 .brand { min-height: 44px; }
