@@ -1,0 +1,129 @@
+:root {
+  --motion-fast: 160ms;
+  --motion-normal: 220ms;
+  --motion-slow: 400ms;
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --motion-standard: cubic-bezier(.2, 0, 0, 1);
+  --motion-lift: -3px;
+  --motion-reveal: 12px;
+}
+@media (max-width: 750px), (pointer: coarse) {
+  :root { --motion-reveal: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* Shared by the static pages, the homepage and the footer. */
+.button, .af-cta, .cn-actions button, .certificate-controls button {
+  transition: background-color var(--motion-fast) var(--motion-standard),
+              color var(--motion-fast) var(--motion-standard),
+              border-color var(--motion-fast) var(--motion-standard);
+}
+:is(.button, .af-cta, .ah-cta, .cn-actions button, .service-entry button, .certificate-controls button):not(:disabled, [aria-disabled="true"]):active {
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+.audit-footer .af-cta:hover { background: #f0d6c6; color: #530907; }
+
+.audit-head .ah-theme {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ah-ink);
+  background: transparent;
+}
+.audit-head .ah-theme:hover { background: var(--ah-tint); }
+.ah-theme .ah-moon, html[data-theme="dark"] .ah-theme .ah-sun { display: none; }
+html[data-theme="dark"] .ah-theme .ah-moon { display: block; }
+.ah-theme select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.ah-theme:has(select:focus-visible) { outline: 3px solid #895049; outline-offset: 2px; }
+html:not([data-theme]) .ah-theme { display: none; }
+html[data-theme="light"] { color-scheme: light; }
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #211d1c;
+  --cream: #2b2523;
+  --ink: #fff4ea;
+  --ink-dark: #fff4ea;
+  --muted: #d4c2b8;
+  --line: #705d54;
+  --rose: #f0b59f;
+  --linen: #e7d6ca;
+  --burgundy: #ffb4a2;
+  --burgundy-dark: #4b2121;
+  --highlight: #ffcfbd;
+  background: var(--paper);
+  color: var(--ink);
+}
+html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+html[data-theme="dark"] :focus-visible { outline-color: var(--rose); }
+html[data-theme="dark"] ::selection { background: #874737; color: white; }
+
+/* Main navigation and popovers also appear on static inner pages. */
+html[data-theme="dark"] .audit-head {
+  --ah-ink: #fff4ea;
+  --ah-brand: #ffd0c0;
+  --ah-surface: #211d1c;
+  --ah-tint: #2d2725;
+  --ah-edge: #594b44;
+  --ah-hover: #46332e;
+  --ah-primary: #ffb4a2;
+  --ah-primary-hover: #ffcfbd;
+  --ah-on-primary: #301919;
+}
+html[data-theme="dark"] :is(#audit-menu, #company-menu, #mobile-menu:popover-open, #max-contact, .ah-skip) {
+  background: var(--paper); color: var(--ink); border-color: var(--line);
+}
+html[data-theme="dark"] #company-menu a:is(:hover, :focus-visible),
+html[data-theme="dark"] .ah-social > :is(button, a):hover { background: #46332e; color: var(--highlight); border-color: var(--rose); }
+html[data-theme="dark"] .audit-head [popover] a:is(:hover, [aria-current]),
+html[data-theme="dark"] :is(.ah-group strong a, .ah-panel-top button, #mobile-menu a[aria-current]) { color: var(--burgundy); }
+html[data-theme="dark"] :is(.ah-group, .ah-secondary, .ah-panel-top button, #mobile-menu summary, #mobile-menu > a, #mobile-menu > details) { border-color: var(--line); }
+html[data-theme="dark"] .ah-theme:has(select:focus-visible) { outline-color: var(--rose); }
+
+/* Homepage sections which are intentionally highlighted in both themes. */
+html[data-theme="dark"] :is(.hero-location, .credential-preview, .hero-task-link:hover) { color: var(--burgundy); }
+html[data-theme="dark"] .hero-task-link:hover { background: #46332e; }
+html[data-theme="dark"] :is(.about-section, .contact-section, .task-result) { background: var(--burgundy-dark); color: var(--ink); }
+html[data-theme="dark"] .task-result .button-light { background: var(--linen); color: #342523; }
+html[data-theme="dark"] .task-result .task-details { color: var(--ink); }
+html[data-theme="dark"] .modal-backdrop { background: rgb(12 8 8 / .78); }
+html[data-theme="dark"] :is(.button-primary, .button-dark, .contact-form .button, .catalog-switch [aria-pressed="true"]) { background: var(--burgundy); color: #301919; }
+html[data-theme="dark"] :is(.button-primary, .button-dark, .contact-form .button):is(:hover, :focus-visible) { background: var(--highlight); color: #301919; }
+html[data-theme="dark"] .contact-choice:has(:checked) { background: #49332f; color: var(--ink); }
+html[data-theme="dark"] .contact-grid .contact-form { border: 1px solid var(--line); }
+
+/* Internal pages, articles and legal documents use separate static stylesheets. */
+html[data-theme="dark"] body:not(.ah-home) main a:not(.button),
+html[data-theme="dark"] .article-contents summary { color: var(--burgundy); }
+html[data-theme="dark"] :is(.mast, .contact-save, .bl-featured, main aside, .bl-reading article > .bl-photo) { background: var(--cream); border-color: var(--line); }
+html[data-theme="dark"] :is(.bl-card, .gallery a) { background: var(--cream); border-color: var(--line); }
+html[data-theme="dark"] :is(.bl-heading h1, .cw-heading h2) { color: var(--ink); }
+html[data-theme="dark"] :is(.crumb, .bl-heading p, .bl-card time, .bl-meta, .bl-card p, .legal-mast p, .cw-panel a small) { color: var(--muted); }
+html[data-theme="dark"] :is(.links a, aside nav a, .article-contents, .legal-related, .contact-requisites dl > div, hr, .bl-body :is(th, td)) { border-color: var(--line); }
+html[data-theme="dark"] body:not(.ah-home) main .button { background: var(--burgundy); color: #301919; }
+
+html[data-theme="dark"] .audit-footer { background: #1c1716; color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] :is(.ac-dialog, .cw-panel) {
+  --ac-ink: var(--ink); --ac-red: var(--burgundy);
+  background: var(--cream); color: var(--ink); border-color: var(--line);
+}
+html[data-theme="dark"] .ac-dialog .ac-intro { color: var(--muted); }
+html[data-theme="dark"] .ac-field input { background: var(--paper); border-color: var(--line); }
+html[data-theme="dark"] .ac-submit:disabled { background: #463b37; color: var(--muted); }
+html[data-theme="dark"] :is(.ac-close, .cw-panel a) { color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] :is(.cw-close, .cw-panel a svg) { color: var(--burgundy); }
+html[data-theme="dark"] :is(.cw-panel a, .ac-close, .cw-close):is(:hover, :focus-visible) { color: var(--ink); background: #46332e; }

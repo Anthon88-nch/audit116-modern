@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://audit116.ru/sitemap_index.xml

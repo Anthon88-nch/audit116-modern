@@ -1,0 +1,23 @@
+.legal-wrap {
+  width: min(74ch, calc(100% - 36px));
+  min-width: 0;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+.legal-mast h1 {
+  margin: 0;
+  font: 500 clamp(1.65rem, 4vw, 3.45rem)/1.16 var(--font-display, Georgia, serif);
+  letter-spacing: -.035em;
+  hyphens: auto;
+}
+.legal-mast p { margin: 1em 0 0; color: #64534d; }
+.legal-reading { padding-block: clamp(1.75rem, 4vw, 3.5rem); }
+.legal-reading article { max-width: none; }
+.legal-reading section + section { margin-top: clamp(1.8rem, 4vw, 3rem); }
+.legal-reading h2 { margin: 0 0 .6em; font-size: clamp(1.35rem, 2.6vw, 1.85rem); }
+.legal-reading p { margin: .65em 0; }
+.legal-reading .article-contents { margin: 0 0 2rem; }
+.legal-related { display: block; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #dccdc3; }
+.legal-related ul { margin: 0; padding: 0; list-style: none; }
+.legal-related li + li { margin: 0; }
+.legal-related a { display: inline-block; padding-block: .45rem; }
